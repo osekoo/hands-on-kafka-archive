@@ -26,10 +26,17 @@ Note: votre compte étudiant de Dauphine vous donne accès gratuitement à la ve
 
 Je vous invite à prendre en main PyCharm avec ce [tutoriel](https://www.jetbrains.com/help/pycharm/creating-and-running-your-first-python-project.html#create-file).
   
-## Docker et docker-compose
-Lors de cette session nous allons exécuter et gérer le cluster Kafka en utilisant docker et docker-compose.  
-Vous pouvez ignorer cette section si vous avez déjà ces deux outils installés sur votre machine.  
-Le tutoriel pour installer/configurer ces deux outils sont disponibles [ici](https://github.com/osekoo/hands-on-spark-scala#pr%C3%A9requis).  
+
+### Docker
+Dans cette session, pour des raisons pratiques, nous allons utiliser des [dockers](https://www.docker.com/) ([conteneurs d'applications](https://fr.wikipedia.org/wiki/Docker_\(logiciel\))) pour exécuter nos applications.  
+Un docker est un conteneur d'applications permettant d'exécuter une application indépendamment du système d'exploitation et de ses dépendances.  
+L'application est packagée d'une façon autonome (avec toutes ses dépendances) pour être exécutée sur n'importe quel système.  
+Les liens ci-dessous vous guident dans l'installation de Docker sur votre machine locale:  
+[Windows](https://docs.docker.com/docker-for-windows/install/) | [Ubuntu](https://docs.docker.com/engine/install/ubuntu/) | [Mac](https://docs.docker.com/docker-for-mac/install/).  
+Veuillez réaliser l'installation avant la session.
+
+### Docker-compose
+Les utilisateurs de Linux ont besoin d'installer [docker-compose](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04). Pour les autres (Mac et Windows), cet utilitaire est déjà inclus dans Docker Desktop (installé plus haut). 
 
 # Lab Session
 Le code source de cette partie est disponible dans ce [repository](https://github.com/osekoo/hands-on-kafka). Vous pouvez le récupérer en utilisant [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git) ou en téléchargeant l'archive.  
