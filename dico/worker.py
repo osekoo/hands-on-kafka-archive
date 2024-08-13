@@ -51,10 +51,10 @@ class KafkaWorker:
         print(f'done.')
 
         # Spark streaming add-on
-        # print(f'sending a request to spark for further operations...', end=' ')
-        # request = KafkaStreamingRequest(data.word, word_def, data.response_topic)
-        # self.producer.send('spark-streaming-topic', value=request)
-        # print(f'done.')
+        print(f'sending a request to spark for further operations...', end=' ')
+        request = KafkaStreamingRequest(data.word, word_def, data.response_topic)
+        self.producer.send('spark-streaming-topic', value=request)
+        print(f'done.')
 
     @staticmethod
     def data_deserializer(data) -> KafkaRequest:
