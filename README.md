@@ -39,7 +39,7 @@ Veuillez réaliser l'installation avant la session.
 Les utilisateurs de Linux ont besoin d'installer [docker-compose](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04). Pour les autres (Mac et Windows), cet utilitaire est déjà inclus dans Docker Desktop (installé plus haut). 
 
 # Lab Session
-Le code source de cette partie est disponible dans ce [repository](https://github.com/osekoo/hands-on-kafka). Vous pouvez le récupérer en utilisant [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git) ou en téléchargeant l'archive.  
+Le code source de cette partie est disponible dans ce [repository](https://github.com/osekoo/hands-on-kafka). Vous pouvez le récupérer en utilisant [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git) ou en téléchargeant l'archive https://github.com/osekoo/hands-on-kafka/archive/refs/heads/develop.zip.  
 ![image](https://user-images.githubusercontent.com/49156499/115967302-3325df80-a532-11eb-825c-58343a02118b.png)
 
 Nous allons étudier deux cas:
@@ -48,18 +48,36 @@ Nous allons étudier deux cas:
 
 ## Cluster Kafka
 Nous allons utiliser les images bitnami de [Kafka](https://github.com/bitnami/bitnami-docker-kafka) pour exécuter Kafka sur notre machine locale.  
-Le fichier `./docker-compose.yaml` (disponible à la racine) contient le script pour lancer localement Kafka.  Il suffit d'exécuter la ligne de commande `docker-compose up` pour lancer le broker kafka.
-Le fichier contient également un service nommé `kafkaui` ([kafdrop](https://github.com/obsidiandynamics/kafdrop) qui permet d'accéder au dashboard de kafka. L'accès à ce dashboard se fait via un browser à l'adresse http://localhost:8080. Nous verrons ensemble les informations disponibles sur ce dashboard.  
+
+### Les étapes pour lancer le cluster
+- extrayez l'archive dans un répertoire
+- ouvrez le répertoire `hands-on-kafka` avec `PyCharm`
+- si l'interpréteur python n'est pas reconnu, 
+    - sélectionnez un interpréteur qui vous sera proposé 
+    - ou allez dans `File > Settings > Project: hands-on-kafka`
+    - cliquez ensuite sur Add interpreter et Add local interpreter. 
+    - cochez la case New et sélection un Base interpreter
+    - ensuite validez tout en cliquant sur OK
+- installez les dépendances python avec la commande `pip install -r requirements.txt`
+- **exécution du broker kafka**: dans un terminal exécutez la commande `docker-compose up`
+    - allez visiter le `dashboard kafka` à l'adresse `http://localhost:9094`. Nous verrons ensemble les informations disponibles sur ce dashboard.  
+
 
 ## Le module `get_started`
 Le module `get_started` permet de publier et de lire des messages. Il contient 3 fichiers:
 - `config.py`: contient les variables/constantes globales.
-- `producer.py`: permet de publier une série de messages dans le bus Kafka. Dans Pycharm, cliquez sur la flèche verte à côté de la ligne `if __name__ == "__main__":` pour exécuter le producer.
+- `producer.py`: permet de publier une série de messages dans le bus Kafka. Dans Pycharm.
 - `consumer.py`: permet de lire les messages publiés par le consumer.
 
-Après exécution de ces deux fichiers, vous pouvez analyser les informations affichées sur le [dashboard](http://localhost:9094).  
-
 ![image](https://user-images.githubusercontent.com/49156499/115967255-da564700-a531-11eb-9a5d-de7ac64d5e67.png)
+
+### Les étapes à suivre pour exécuter le module get_started:
+
+- **exécution du producer**: dans un autre terminal exécuter la commande  `python ./get_started/producer.py`
+    - le producer envoie sur le broker une série de nombres de 0 à 99
+- **exécution du consumer**: dans un autre terminal exécuter la commande  `python ./get_started/consumer.py`
+    - le consumer lit les nombres envoyés par le producer et affiche un message sur la console
+    - allez sur le `dashboard`, cliquez sur `my-topic` ensuite sur la `partition 0` pour voir les messages envoyés
 
 
 ## Le module `dico`
