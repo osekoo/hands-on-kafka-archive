@@ -44,4 +44,4 @@ producer_handler = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER,
 
 if __name__ == "__main__":
     # send(producer_handler, 5)
-    send_with_key(producer_handler, 100, 2)
+    send(producer_handler, 100, 2)
