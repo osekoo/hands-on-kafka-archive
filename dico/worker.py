@@ -2,9 +2,9 @@ import json
 
 from kafka import KafkaConsumer, KafkaProducer
 
-from dico.config import BOOTSTRAP_SERVER, TOPIC_DICO_FR, TOPIC_DICO_EN, LANGUAGE_EN
-from dico.crawler import Crawler, CrawlerEN, CrawlerFR
-from dico.kafka_data import KafkaRequest, KafkaResponse, KafkaStreamingRequest
+from config import BOOTSTRAP_SERVER, TOPIC_DICO_FR, TOPIC_DICO_EN, LANGUAGE_EN
+from crawler import Crawler, CrawlerEN, CrawlerFR
+from kafka_data import KafkaRequest, KafkaResponse, KafkaStreamingRequest
 
 
 class KafkaWorker:

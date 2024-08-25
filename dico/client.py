@@ -3,8 +3,8 @@ import threading
 
 from kafka import KafkaConsumer, KafkaProducer
 
-from dico.kafka_data import KafkaRequest, KafkaResponse
-from dico.config import BOOTSTRAP_SERVER, TOPIC_DICO_FR, TOPIC_DICO_EN
+from kafka_data import KafkaRequest, KafkaResponse
+from config import BOOTSTRAP_SERVER, TOPIC_DICO_FR, TOPIC_DICO_EN
 
 
 class KafkaClient:
