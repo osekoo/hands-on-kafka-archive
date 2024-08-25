@@ -3,7 +3,7 @@ import json
 
 from kafka import KafkaConsumer
 
-from get_started.config import BOOTSTRAP_SERVER, TOPIC_NAME
+from config import BOOTSTRAP_SERVER, TOPIC_NAME
 
 
 def data_deserializer(data):
