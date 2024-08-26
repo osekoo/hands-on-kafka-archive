@@ -34,7 +34,9 @@ class KafkaWorker:
     def consume(self):
         if not self.consumer:
             self.connect()
+        print('reading data from Kafka...')
         for data in self.consumer:
+            print('received:', data.value)
             self.__handle_word(data.value)
 
     def __handle_word(self, data: KafkaRequest):
@@ -44,6 +46,7 @@ class KafkaWorker:
         """
         print(f'searching {data.word} ...', end=' ')
         word_def = self.crawler.get_definition(data.word)
+        print(f'\ndefinition found: {word_def}')
         print(f'done.')
         message = KafkaResponse(data.word, word_def)
         print(f'sending back the definition of {data.word} ...', end=' ')

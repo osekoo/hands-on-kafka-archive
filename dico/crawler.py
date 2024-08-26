@@ -9,16 +9,23 @@ class Crawler:
 
 
 class CrawlerFR(Crawler):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'}
 
     def __init__(self):
         self.base_url = 'https://dictionnaire.lerobert.com/definition/{word}'
 
     def get_definition(self, word: str):
         request_url = self.base_url.replace('{word}', word)
-        page = requests.get(request_url)
+        page = requests.get(request_url, headers=self.headers)
         soup_handler = BeautifulSoup(page.content, 'html.parser')
-        definition_elt = soup_handler.select_one('body > div.ws-c > main > section.def > div.b')
-        return re.sub(r'(\n\s*)+\n+', '\n\n', definition_elt.text) if definition_elt else None
+        definition_elts = soup_handler.select('.d_dvn')
+        definitions = [elt.text for elt in definition_elts]
+        definition = '\n\n'.join(definitions) if definitions else 'Not found.'
+        # remove extra new lines
+        definition = re.sub(r'(\n\s*)+\n+', '\n\n', definition) if definition else None
+        print('definition:', definition)
+        return definition
 
 
 class CrawlerEN(Crawler):

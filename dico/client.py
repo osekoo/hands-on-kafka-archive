@@ -31,9 +31,8 @@ class KafkaClient:
         if not self.producer:
             self.connect()
         word = None
-        print('Enter the word to search > ', end='')
         while word != '':
-            word = input()  # read word from the shell
+            word = input('Enter the word to search > ')  # read word from the shell
             data = KafkaRequest(word, self.response_topic_name)
             self.producer.send(self.dico_topic_name, data)
         self.running = False
@@ -43,11 +42,11 @@ class KafkaClient:
         if not self.consumer:
             self.connect()
         for data in self.consumer:
-            if data.value.word == '':
+            if data.value is None or data.value.definition is None:
+                continue
+            if not self.running:
                 break
-            print(f'definition of {data.value.word}: ')
             print(data.value)
-            print('Enter the word to search > ', end='')
 
     @staticmethod
     def data_deserializer(data) -> KafkaResponse:
@@ -72,7 +71,7 @@ class KafkaClient:
 if __name__ == "__main__":
     your_name = input('Your nickname? ')
 
-    dico_name = input('Which dictionary? ')
+    dico_name = input('Which dictionary ([fr]/en)? ')
     topic = TOPIC_DICO_EN if dico_name == 'en' else TOPIC_DICO_FR
 
     def_producer = KafkaClient(topic, topic + '-' + your_name)
