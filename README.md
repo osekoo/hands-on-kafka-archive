@@ -39,7 +39,8 @@ Veuillez réaliser l'installation avant la session.
 Les utilisateurs de Linux ont besoin d'installer [docker-compose](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04). Pour les autres (Mac et Windows), cet utilitaire est déjà inclus dans Docker Desktop (installé plus haut). 
 
 # Lab Session
-Le code source de cette partie est disponible dans ce [repository](https://github.com/osekoo/hands-on-kafka). Vous pouvez le récupérer en utilisant [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git) ou en téléchargeant l'archive https://github.com/osekoo/hands-on-kafka/archive/refs/heads/develop.zip.  
+Le code source de cette partie est disponible dans ce [repository](https://github.com/osekoo/hands-on-kafka).  
+Vous pouvez le récupérer en utilisant [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git) ou en téléchargeant l'archive https://github.com/osekoo/hands-on-kafka/archive/refs/heads/develop.zip.  
 ![image](https://user-images.githubusercontent.com/49156499/115967302-3325df80-a532-11eb-825c-58343a02118b.png)
 
 Nous allons étudier deux cas:
@@ -87,6 +88,21 @@ Le module `dico` permet de chercher la définition d'un mot sur Internet. Il sup
 - `worker.py`: contient une class (`Worker`) qui permet de lire les requêtes de recherche postées dans le bus Kafka (en mode `consumer`), effectue la recherche en utilisant le crawler (`data processing`) et republie le résultat dans Kafka (en mode `producer`). Il faut cliquer sur la flèche verte à côté de `if __name__ == "__main__":` pour exécuter le worker. Vous devez spécifier la langue de recherche (`fr` pour français ou `en` pour anglais) à l'invite commande.
 - `client.py`: publie dans Kafka la requête de recherche de définition (en mode `producer`) et lit au retour la réponse (en mode `consumer`). Il faut cliquer sur la flèche verte à côté de `if __name__ == "__main__":` pour exécuter le client. Vous devez spécifier votre pseudonyme (utilisé pour créer le topic qui servira à lire les réponses) et la langue de recherche (`fr` pour français ou `en` pour anglais).
 - `kafka_data.py`: implémente les structures de données (`KafkaRequest`, `KafkaResponse`) échanger entre les clients et les workers à travers Kafka.
+
+### Mise en œuvre du module dico:
+1. cluster kafka: dans un terminal, exécutez la commande docker-compose up
+2. lancement du client, dans un autre terminal, exécutez le script python dico/client.py
+    1. entrez votre pseudonyme
+    2. choisissez le dictionnaire, par exemple 'fr'
+    3. entrez un mot en français par exemple
+    4. allez sur le dashboard de kafka, ouvrez le topic topic-dictionary-fr, naviguez dans les partitions pour trouver le message avec le mot que vous venez d'entrer
+    5. vous devez voir également sur le dashboard un topic nommé topic-dictionary-fr-<pseudonyme>
+3. lancement du worker: dans un autre terminal, exécutez le script python dico/worker.py
+    1. le worker lit les mots à définir de puis kafka
+    2. crawl un site internet (Larousse pour le français)
+    3. republie le résultat sur le broker kafka dans le topic  topic-dictionary-fr-<pseudonyme> pour qu'il puisse être lu par le client
+    4. dans le même temps, le worker publie dans le topic spark-streaming-dico le mot et sa définition
+    5. ce topic sera lu par Spark Streaming pour réaliser d'autres opérations (e.g WordCount)
 
 ![image](https://user-images.githubusercontent.com/49156499/115967493-2f468d00-a533-11eb-86c4-fa82c7ec9f3d.png)
 
