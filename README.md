@@ -82,6 +82,9 @@ Le module `get_started` permet de publier et de lire des messages. Il contient 3
 
 
 ## Le module `dico`
+
+![image](https://user-images.githubusercontent.com/49156499/115967493-2f468d00-a533-11eb-86c4-fa82c7ec9f3d.png)
+
 Le module `dico` permet de chercher la définition d'un mot sur Internet. Il supporte le français (lerobert.com) et l'anglais (dictionary.com). Ce module contient 5 fichiers:
 - `config.py`: contient les variables globales (noms des topics, noms des dictionnaires, etc.).
 - `crawler.py`: permet de chercher la définition des mots sur Internet en français (`CrawlerFR`) et en anglais (`CrawlerEN`). Cette classe extrait la définition des en parsant la source HTML du résultat de recherche. Le parsing peut parfois échoué si la structure HTML de la page change.
@@ -90,9 +93,6 @@ Le module `dico` permet de chercher la définition d'un mot sur Internet. Il sup
 - `kafka_data.py`: implémente les structures de données (`KafkaRequest`, `KafkaResponse`) échanger entre les clients et les workers à travers Kafka.
 
 ### Mise en œuvre du module dico:
-
-![image](https://user-images.githubusercontent.com/49156499/115967493-2f468d00-a533-11eb-86c4-fa82c7ec9f3d.png)
-
 1. cluster kafka: dans un terminal, exécutez la commande docker-compose up
 2. lancement du client, dans un autre terminal, exécutez le script python dico/client.py
     1. entrez votre pseudonyme
