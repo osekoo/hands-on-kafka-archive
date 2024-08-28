@@ -90,6 +90,9 @@ Le module `dico` permet de chercher la définition d'un mot sur Internet. Il sup
 - `kafka_data.py`: implémente les structures de données (`KafkaRequest`, `KafkaResponse`) échanger entre les clients et les workers à travers Kafka.
 
 ### Mise en œuvre du module dico:
+
+![image](https://user-images.githubusercontent.com/49156499/115967493-2f468d00-a533-11eb-86c4-fa82c7ec9f3d.png)
+
 1. cluster kafka: dans un terminal, exécutez la commande docker-compose up
 2. lancement du client, dans un autre terminal, exécutez le script python dico/client.py
     1. entrez votre pseudonyme
@@ -104,7 +107,6 @@ Le module `dico` permet de chercher la définition d'un mot sur Internet. Il sup
     4. dans le même temps, le worker publie dans le topic spark-streaming-dico le mot et sa définition
     5. ce topic sera lu par Spark Streaming pour réaliser d'autres opérations (e.g WordCount)
 
-![image](https://user-images.githubusercontent.com/49156499/115967493-2f468d00-a533-11eb-86c4-fa82c7ec9f3d.png)
 
 
 ## Pour aller plus loin
