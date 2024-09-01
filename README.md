@@ -51,16 +51,16 @@ Nous allons étudier deux cas:
 Nous allons utiliser les images bitnami de [Kafka](https://github.com/bitnami/bitnami-docker-kafka) pour exécuter Kafka sur notre machine locale.  
 
 ### Les étapes pour lancer le cluster
-- extrayez l'archive dans un répertoire
-- ouvrez le répertoire `hands-on-kafka` avec `PyCharm`
-- si l'interpréteur python n'est pas reconnu, 
-    - sélectionnez un interpréteur qui vous sera proposé 
-    - ou allez dans `File > Settings > Project: hands-on-kafka`
-    - cliquez ensuite sur Add interpreter et Add local interpreter. 
-    - cochez la case New et sélection un Base interpreter
-    - ensuite validez tout en cliquant sur OK
-- installez les dépendances python avec la commande `pip install -r requirements.txt`
-- **exécution du broker kafka**: dans un terminal exécutez la commande `docker-compose up`
+1. extrayez l'archive dans un répertoire
+2. ouvrez le répertoire `hands-on-kafka` avec `PyCharm`
+3. si l'interpréteur python n'est pas reconnu, 
+    1. sélectionnez un interpréteur qui vous sera proposé 
+    2. ou allez dans `File > Settings > Project: hands-on-kafka`
+    3. cliquez ensuite sur Add interpreter et Add local interpreter. 
+    4. cochez la case New et sélection un Base interpreter
+    5. ensuite validez tout en cliquant sur OK
+4. installez les dépendances python avec la commande `pip install -r requirements.txt`
+5. **exécution du broker kafka**: dans un terminal exécutez la commande `docker-compose up`
     - allez visiter le `dashboard kafka` à l'adresse `http://localhost:9094`. Nous verrons ensemble les informations disponibles sur ce dashboard.  
 
 
@@ -74,11 +74,11 @@ Le module `get_started` permet de publier et de lire des messages. Il contient 3
 
 ### Les étapes à suivre pour exécuter le module get_started:
 
-- **exécution du producer**: dans un autre terminal exécuter la commande  `python ./get_started/producer.py`
-    - le producer envoie sur le broker une série de nombres de 0 à 99
-- **exécution du consumer**: dans un autre terminal exécuter la commande  `python ./get_started/consumer.py`
-    - le consumer lit les nombres envoyés par le producer et affiche un message sur la console
-    - allez sur le `dashboard`, cliquez sur `my-topic` ensuite sur la `partition 0` pour voir les messages envoyés
+1. **exécution du producer**: dans un autre terminal exécuter la commande  `python ./get_started/producer.py`
+    1. le producer envoie sur le broker une série de nombres de 0 à 99
+2. **exécution du consumer**: dans un autre terminal exécuter la commande  `python ./get_started/consumer.py`
+    1. le consumer lit les nombres envoyés par le producer et affiche un message sur la console
+    2. allez sur le `dashboard`, cliquez sur `my-topic` ensuite sur la `partition 0` pour voir les messages envoyés
 
 
 ## Le module `dico`
