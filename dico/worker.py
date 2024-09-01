@@ -34,7 +34,7 @@ class KafkaWorker:
     def consume(self):
         if not self.consumer:
             self.connect()
-        print('reading data from Kafka...')
+        print(f'reading data from Kafka topic `{self.topic_name}`...')
         for data in self.consumer:
             print('received:', data.value)
             self.__handle_word(data.value)

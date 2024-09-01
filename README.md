@@ -93,7 +93,7 @@ Le module `dico` permet de chercher la définition d'un mot sur Internet. Il sup
 - `kafka_data.py`: implémente les structures de données (`KafkaRequest`, `KafkaResponse`) échangées entre les clients et les workers à travers Kafka.
 
 ### Mise en œuvre du module dico:
-1. **cluster kafka**: dans un terminal, exécutez la commande docker-compose up
+1. **cluster kafka**: dans un terminal, exécutez la commande `docker-compose up`
 2. **lancement du client**: dans un autre terminal, exécutez le script `python dico/client.py`
     1. entrez votre pseudonyme
     2. choisissez le dictionnaire, par exemple `fr` pour le français

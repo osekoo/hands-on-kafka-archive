@@ -17,7 +17,7 @@ def data_deserializer(data):
 
 def receive(consumer):
     for data in consumer:
-        print('Hello:', data.value)
+        print('Read:', data.value['message'])
         # time.sleep(1)
 
 
