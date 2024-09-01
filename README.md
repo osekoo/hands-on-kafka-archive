@@ -41,7 +41,6 @@ Les utilisateurs de Linux ont besoin d'installer [docker-compose](https://www.di
 # Lab Session
 Le code source de cette partie est disponible dans ce [repository](https://github.com/osekoo/hands-on-kafka).  
 Vous pouvez le récupérer en utilisant [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git) ou en téléchargeant l'archive https://github.com/osekoo/hands-on-kafka/archive/refs/heads/develop.zip.  
-![image](https://user-images.githubusercontent.com/49156499/115967302-3325df80-a532-11eb-825c-58343a02118b.png)
 
 Nous allons étudier deux cas:
 - <b>get_started</b>: une application simple d'écriture et de lecture de données. Il permet de comprendre les différents mécanismes de Kafka (producers, consumers, consumer group, etc).
@@ -56,19 +55,20 @@ Nous allons utiliser les images bitnami de [Kafka](https://github.com/bitnami/bi
 3. si l'interpréteur python n'est pas reconnu, 
     1. sélectionnez un interpréteur qui vous sera proposé 
     2. ou allez dans `File > Settings > Project: hands-on-kafka`
-    3. cliquez ensuite sur Add interpreter et Add local interpreter. 
-    4. cochez la case New et sélection un Base interpreter
-    5. ensuite validez tout en cliquant sur OK
+    3. cliquez ensuite sur `Add interpreter` et `Add local interpreter`. 
+    4. cochez la case `New` et sélectionnez un `Base interpreter`
+    5. ensuite validez tout en cliquant sur `OK`
 4. installez les dépendances python avec la commande `pip install -r requirements.txt`
 5. **exécution du broker kafka**: dans un terminal exécutez la commande `docker-compose up`
-    - allez visiter le `dashboard kafka` à l'adresse `http://localhost:9094`. Nous verrons ensemble les informations disponibles sur ce dashboard.  
+    1. allez visiter le `dashboard kafka` à l'adresse `http://localhost:9094`. 
+    2. Nous verrons ensemble les informations disponibles sur ce dashboard.  
 
 
 ## Le module `get_started`
 Le module `get_started` permet de publier et de lire des messages. Il contient 3 fichiers:
 - `config.py`: contient les variables/constantes globales.
-- `producer.py`: permet de publier une série de messages dans le bus Kafka. Dans Pycharm.
-- `consumer.py`: permet de lire les messages publiés par le consumer.
+- `producer.py`: permet de publier une série de messages (ici une série de chiffres) sur le bus Kafka.
+- `consumer.py`: permet de lire les messages (les chiffres publiés par le `producer`) publiés par le consumer.
 
 ![image](https://user-images.githubusercontent.com/49156499/115967255-da564700-a531-11eb-9a5d-de7ac64d5e67.png)
 
@@ -87,25 +87,25 @@ Le module `get_started` permet de publier et de lire des messages. Il contient 3
 
 Le module `dico` permet de chercher la définition d'un mot sur Internet. Il supporte le français (lerobert.com) et l'anglais (dictionary.com). Ce module contient 5 fichiers:
 - `config.py`: contient les variables globales (noms des topics, noms des dictionnaires, etc.).
-- `crawler.py`: permet de chercher la définition des mots sur Internet en français (`CrawlerFR`) et en anglais (`CrawlerEN`). Cette classe extrait la définition des en parsant la source HTML du résultat de recherche. Le parsing peut parfois échoué si la structure HTML de la page change.
-- `worker.py`: contient une class (`Worker`) qui permet de lire les requêtes de recherche postées dans le bus Kafka (en mode `consumer`), effectue la recherche en utilisant le crawler (`data processing`) et republie le résultat dans Kafka (en mode `producer`). Il faut cliquer sur la flèche verte à côté de `if __name__ == "__main__":` pour exécuter le worker. Vous devez spécifier la langue de recherche (`fr` pour français ou `en` pour anglais) à l'invite commande.
-- `client.py`: publie dans Kafka la requête de recherche de définition (en mode `producer`) et lit au retour la réponse (en mode `consumer`). Il faut cliquer sur la flèche verte à côté de `if __name__ == "__main__":` pour exécuter le client. Vous devez spécifier votre pseudonyme (utilisé pour créer le topic qui servira à lire les réponses) et la langue de recherche (`fr` pour français ou `en` pour anglais).
-- `kafka_data.py`: implémente les structures de données (`KafkaRequest`, `KafkaResponse`) échanger entre les clients et les workers à travers Kafka.
+- `crawler.py`: permet de chercher la définition des mots sur Internet en français (`CrawlerFR`) et en anglais (`CrawlerEN`). Cette classe extrait la définition des mots en parsant la source HTML du résultat de recherche. Le parsing peut parfois échoué si la structure HTML de la page a changé.
+- `worker.py`: contient une class (`Worker`) qui permet de lire les requêtes de recherche postées dans le bus Kafka (en mode `consumer`), effectue la recherche en utilisant le crawler (`data processing`) et republie le résultat dans Kafka (en mode `producer`).
+- `client.py`: publie dans Kafka la requête de recherche de définition (en mode `producer`) et lit au retour la réponse (en mode `consumer`). Il affiche la réponse sur la console.
+- `kafka_data.py`: implémente les structures de données (`KafkaRequest`, `KafkaResponse`) échangées entre les clients et les workers à travers Kafka.
 
 ### Mise en œuvre du module dico:
-1. cluster kafka: dans un terminal, exécutez la commande docker-compose up
-2. lancement du client, dans un autre terminal, exécutez le script python dico/client.py
+1. **cluster kafka**: dans un terminal, exécutez la commande docker-compose up
+2. **lancement du client**: dans un autre terminal, exécutez le script `python dico/client.py`
     1. entrez votre pseudonyme
-    2. choisissez le dictionnaire, par exemple 'fr'
-    3. entrez un mot en français par exemple
-    4. allez sur le dashboard de kafka, ouvrez le topic topic-dictionary-fr, naviguez dans les partitions pour trouver le message avec le mot que vous venez d'entrer
-    5. vous devez voir également sur le dashboard un topic nommé topic-dictionary-fr-<pseudonyme>
-3. lancement du worker: dans un autre terminal, exécutez le script python dico/worker.py
-    1. le worker lit les mots à définir de puis kafka
-    2. crawl un site internet (Larousse pour le français)
-    3. republie le résultat sur le broker kafka dans le topic  topic-dictionary-fr-<pseudonyme> pour qu'il puisse être lu par le client
-    4. dans le même temps, le worker publie dans le topic spark-streaming-dico le mot et sa définition
-    5. ce topic sera lu par Spark Streaming pour réaliser d'autres opérations (e.g WordCount)
+    2. choisissez le dictionnaire, par exemple `fr` pour le français
+    3. entrez un mot en français, par exemple `bonjour`
+    4. allez sur le dashboard de kafka (http://localhost:9094), ouvrez le topic `topic-dictionary-fr`, naviguez dans les partitions pour trouver le message avec le mot que vous venez d'entrer
+    5. vous devez voir également sur le dashboard un topic nommé `topic-dictionary-fr-<pseudonyme>` avec le message contenant le mot et sa définition
+3. **lancement du worker**: dans un autre terminal, exécutez le script `python dico/worker.py`
+    1. le worker lit les mots à définir de puis kafka et les définit en utilisant le crawler
+    2. crawle un site internet (Larousse pour le français) pour récupérer la définition du mot
+    3. republie le résultat sur le broker kafka dans le topic  `topic-dictionary-fr-<pseudonyme>` pour qu'il puisse être lu par le client
+    4. dans le même temps, le worker publie dans le topic `spark-streaming-dico` le mot et sa définition
+    5. ce topic sera lu par l'application `Spark Streaming` pour réaliser d'autres opérations (e.g WordCount)
 
 
 
