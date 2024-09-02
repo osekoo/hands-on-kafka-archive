@@ -3,8 +3,8 @@ import threading
 
 from kafka import KafkaConsumer, KafkaProducer
 
-from kafka_data import KafkaRequest, KafkaResponse
 from config import BOOTSTRAP_SERVER, TOPIC_DICO_FR, TOPIC_DICO_EN
+from kafka_data import KafkaRequest, KafkaResponse
 
 
 class KafkaClient:
@@ -17,6 +17,9 @@ class KafkaClient:
         self.running = True
 
     def connect(self):
+        """
+        Connects the producer (sending word request) and the consumer (reading the definition) to Kafka
+        """
         self.producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER,
                                       value_serializer=self.data_serializer)
 
@@ -28,25 +31,53 @@ class KafkaClient:
                                       group_id=self.response_topic_name + '-group')
 
     def produce(self):
+        """
+        Reads the words from the shell and sends them to the Kafka topic
+        """
         if not self.producer:
             self.connect()
         word = None
         while word != '':
-            word = input('Enter the word to search > ')  # read word from the shell
+            word = input('Enter the word to search (or press Enter to finish) > ')  # read word from the shell
+            if word == '':
+                print('shutting down...')
+                break
+            data = KafkaRequest(word.strip(), self.response_topic_name)
+            self.producer.send(self.dico_topic_name, data)
+        self.running = False
+
+    def bulk_search_words(self, words):
+        """
+        Sends the given words to the Kafka topic
+        """
+        if not self.producer:
+            self.connect()
+        for word in words:
             data = KafkaRequest(word, self.response_topic_name)
             self.producer.send(self.dico_topic_name, data)
         self.running = False
-        print('Bye.')
+        print('Done.')
 
     def read_definition(self):
+        """
+        Reads the definition of the words from the Kafka topic
+        """
         if not self.consumer:
             self.connect()
-        for data in self.consumer:
-            if data.value is None or data.value.definition is None:
-                continue
+
+        while self.running:
+            items = self.consumer.poll(timeout_ms=1000)  # read the definition from the Kafka topic in non-blocking mode
             if not self.running:
                 break
-            print(data.value)
+            for values in items.values():  # iterate over the values of the items
+                for data in values:
+                    print('\n================= Definition of `', data.value.word, '`=================')
+                    print(data.value.definition)
+                    print('================= End of definition =================')
+                self.consumer.commit()
+
+        print('Stop reading definition.')
+        print('Bye.')
 
     @staticmethod
     def data_deserializer(data) -> KafkaResponse:
@@ -69,15 +100,18 @@ class KafkaClient:
 
 
 if __name__ == "__main__":
-    your_name = input('Your nickname? ')
+    your_name = input('Your nickname? ')  # read the user's nickname from the shell (to create a unique topic name)
+    dico_name = input('Which dictionary ([fr]/en)? ')  # read the dictionary name from the shell (fr or en)
+    topic = TOPIC_DICO_EN if dico_name == 'en' else TOPIC_DICO_FR  # set the topic name based on the dictionary name
+    def_producer = KafkaClient(topic, topic + '-' + your_name)  # create a Kafka client
 
-    dico_name = input('Which dictionary ([fr]/en)? ')
-    topic = TOPIC_DICO_EN if dico_name == 'en' else TOPIC_DICO_FR
-
-    def_producer = KafkaClient(topic, topic + '-' + your_name)
-
-    reading_thread = threading.Thread(target=def_producer.read_definition)
-    reading_thread.start()
+    reading_thread = threading.Thread(target=def_producer.read_definition)  # create a thread to read the definition
+    reading_thread.start()  # start the thread
 
     print(f'dico client \'{topic}\' started.')
-    def_producer.produce()
+    def_producer.produce()  # start the producer
+
+    # read the words from the file and send them to the Kafka topic in bulk
+    # with open('words_fr.txt', 'r') as f:
+    #     word_list = f.read().splitlines()
+    # def_producer.search_words(word_list)  # search the words from the file

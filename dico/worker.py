@@ -44,20 +44,19 @@ class KafkaWorker:
         Requests the definition of the word and send it back to the requester
         :return:
         """
-        print(f'searching {data.word} ...', end=' ')
+        print(f'searching `{data.word}`...')
         word_def = self.crawler.get_definition(data.word)
         print(f'\ndefinition found: {word_def}')
-        print(f'done.')
         message = KafkaResponse(data.word, word_def)
-        print(f'sending back the definition of {data.word} ...', end=' ')
+        print(f'sending back the definition of `{data.word}`...')
         self.producer.send(data.response_topic, value=message)
-        print(f'done.')
 
         # Spark streaming add-on
-        print(f'sending a request to spark for further operations...', end=' ')
-        request = KafkaStreamingRequest(data.word, word_def, data.response_topic)
-        self.producer.send('spark-streaming-topic', value=request)
-        print(f'done.')
+        if word_def != 'NOT_FOUND':
+            print(f'sending a request to spark for further operations...')
+            request = KafkaStreamingRequest(data.word, word_def, data.response_topic)
+            self.producer.send('spark-streaming-topic', value=request)
+            print(f'done.')
 
     @staticmethod
     def data_deserializer(data) -> KafkaRequest:

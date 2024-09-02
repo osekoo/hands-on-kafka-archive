@@ -17,11 +17,13 @@ class CrawlerFR(Crawler):
 
     def get_definition(self, word: str):
         request_url = self.base_url.replace('{word}', word)
+        print('Crawling ', request_url, '...')
         page = requests.get(request_url, headers=self.headers)
         soup_handler = BeautifulSoup(page.content, 'html.parser')
-        definition_elts = soup_handler.select('.d_dvn')
+        # get the definition elements with css classes 'd_dvn' or 'd_dfn'
+        definition_elts = soup_handler.select('.d_dvn, .d_dfn')
         definitions = [elt.text for elt in definition_elts]
-        definition = '\n\n'.join(definitions) if definitions else 'Not found.'
+        definition = '\n\n'.join(definitions) if definitions else 'NOT_FOUND'
         # remove extra new lines
         definition = re.sub(r'(\n\s*)+\n+', '\n\n', definition) if definition else None
         print('definition:', definition)
