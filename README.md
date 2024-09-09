@@ -99,13 +99,13 @@ Le module `dico` permet de chercher la définition d'un mot sur Internet. Il sup
     2. choisissez le dictionnaire, par exemple `fr` pour le français
     3. entrez un mot en français, par exemple `bonjour`
     4. allez sur le dashboard de kafka (http://localhost:9094), ouvrez le topic `topic-dictionary-fr`, naviguez dans les partitions pour trouver le message avec le mot que vous venez d'entrer
-    5. vous devez voir également sur le dashboard un topic nommé `topic-dictionary-fr-<pseudonyme>` avec le message contenant le mot et sa définition
 3. **lancement du worker**: dans un autre terminal, exécutez le script `python dico/worker.py`
     1. le worker lit les mots à définir de puis kafka et les définit en utilisant le crawler
     2. crawle un site internet (Larousse pour le français) pour récupérer la définition du mot
     3. republie le résultat sur le broker kafka dans le topic  `topic-dictionary-fr-<pseudonyme>` pour qu'il puisse être lu par le client
     4. dans le même temps, le worker publie dans le topic `spark-streaming-dico` le mot et sa définition
     5. ce topic sera lu par l'application `Spark Streaming` pour réaliser d'autres opérations (e.g WordCount)
+    6. vous devez voir également sur le dashboard un topic nommé `topic-dictionary-fr-<pseudonyme>` avec le message contenant le mot et sa définition
 
 
 
